@@ -1,0 +1,209 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Actors table
+model User {
+  ID             Int              @id @default(autoincrement())
+  name           String?
+  image          String?
+  phone_number   String           @unique
+  gender         Gender?
+  place_of_birth String?
+  date_of_birth  String?
+  time_of_birth  DateTime?
+  status         Status?
+  otp            Int?
+  otp_expired_in DateTime?
+  conversations  Conversation[]
+  followings     Astrologer[]     @relation("UserToAstrologer")
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime?        @updatedAt()
+  UserAstrologer UserAstrologer[]
+}
+
+model Astrologer {
+  ID               Int              @id @default(autoincrement())
+  first_name       String
+  last_name        String
+  email            String           @unique @db.VarChar(100)
+  phone            String           @unique @db.VarChar(10)
+  password         String
+  career_start     DateTime?
+  gender           Gender?
+  status           Status?
+  image            String?
+  short_bio        String?
+  city             String?
+  country          String?
+  languages        Language[]
+  astrologer_types AstrologerType[]
+  createdAt        DateTime?        @default(now())
+  updatedAt        DateTime?        @updatedAt()
+  blogs            Blog_Post[]
+  shortcuts        Shortcut[]
+  leaves           Leave[]
+  conversations    Conversation[]
+  followers        User[]           @relation("UserToAstrologer")
+  UserAstrologer   UserAstrologer[]
+  rates            Rate[]
+}
+
+model Rate {
+  ID                Int        @id @default(autoincrement())
+  call_rate         Float
+  chat_rate         Float
+  private_call_rate Float
+  discount          Float
+  createdAt         DateTime?  @default(now())
+  updatedAt         DateTime?  @updatedAt()
+  astrologer        Astrologer @relation(fields: [astrologer_id], references: [ID])
+  astrologer_id     Int
+}
+
+model Leave {
+  ID            Int        @id @default(autoincrement())
+  from_date     DateTime
+  to_date       DateTime
+  reason        String
+  Astrologer    Astrologer @relation(fields: [astrologer_id], references: [ID])
+  astrologer_id Int
+}
+
+model Admin {
+  ID    Int         @id @default(autoincrement())
+  name  String
+  blogs Blog_Post[]
+}
+
+//astrologer related table
+model AstrologerType {
+  ID          Int          @id @default(autoincrement())
+  type        String       @unique
+  astrologers Astrologer[]
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?    @updatedAt()
+
+  @@map("astrologer_type")
+}
+
+model Shortcut {
+  ID       Int    @id @default(autoincrement())
+  shortcut String
+  message  String
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt()
+  astrologer    Astrologer @relation(fields: [astrologer_id], references: [ID])
+  astrologer_id Int
+
+  @@unique([astrologer_id, shortcut])
+}
+
+model Language {
+  ID            Int          @id @default(autoincrement())
+  language_name String
+  astrologers   Astrologer[]
+}
+
+model Tag {
+  ID          Int         @id @default(autoincrement())
+  name        String      @unique
+  Blog_Post   Blog_Post[]
+  blog_PostID Int?
+}
+
+model Blog_Post {
+  ID            Int         @id @default(autoincrement())
+  image         String?
+  title         String
+  category      Category?   @relation(fields: [category_id], references: [ID])
+  content       String
+  astrologer    Astrologer? @relation(fields: [astrologer_id], references: [ID])
+  astrologer_id Int?
+  admin         Admin?      @relation(fields: [admin_id], references: [ID])
+  admin_id      Int?
+  tags          Tag[]
+  tag_id        Int?
+  created_by    UserType?
+  category_id   Int
+}
+
+model Category {
+  ID        Int         @id @default(autoincrement())
+  name      String
+  Blog_Post Blog_Post[]
+}
+
+//common table
+model Conversation {
+  ID            Int        @id @default(autoincrement())
+  user          User       @relation(fields: [user_id], references: [ID])
+  user_id       Int
+  astrologer    Astrologer @relation(fields: [astrologer_id], references: [ID])
+  astrologer_id Int
+  messages      Message[]
+
+  @@unique([astrologer_id, user_id])
+}
+
+model Message {
+  ID              Int          @id @default(autoincrement())
+  content         String
+  sender          Sender
+  userId          Int? 
+  astrologer_id   Int?
+  conversation    Conversation? @relation(fields: [conversation_id], references: [ID])
+  conversation_id Int
+  createdAt       DateTime?    @default(now())
+}
+
+model UserAstrologer {
+  id            Int        @id @default(autoincrement())
+  user_id       Int
+  astrologer_id Int
+  user          User       @relation(fields: [user_id], references: [ID])
+  astrologer    Astrologer @relation(fields: [astrologer_id], references: [ID])
+
+  @@unique([user_id, astrologer_id])
+}
+
+model Support {
+  ID           Int    @id @default(autoincrement())
+  phone_number String
+  subject      String
+  description  String
+  image        String
+}
+
+enum Sender {
+  user
+  astrologer
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+enum Status {
+  active
+  inactive
+}
+
+enum BlogCreater {
+  astrologer
+  admin
+}
+
+enum UserType {
+  user
+  astrologer
+  admin
+}
