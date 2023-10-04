@@ -7,13 +7,14 @@ const { Server } = require("socket.io")
 const astrologer = require('./routes/astrologer/index')
 const errorHandler = require('./middlewares/errorHandler')
 const Token = require('./services/Token')
-const verifySocketUser = require('./middlewares/verifySocketUser')
+const userRouter = require('./routes/user')
 
 
 app.use(express.json())
 app.use(cors({ origin: '*'}));
 app.use(cors())
 app.use('/astrologer',astrologer)
+app.use('/user',userRouter);
 app.get('/health', (req, res) => {
   res.send('OK')
 })

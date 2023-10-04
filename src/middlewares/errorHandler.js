@@ -1,4 +1,4 @@
-const { Prisma } = require("@prisma/client")
+const { removeUnusedMulterImageFilesOnError } = require("../helpers/helper")
 const ApiError = require("../utils/ApiError")
 function errorHandler(err, req, res, next) {
   let error = err
@@ -15,7 +15,7 @@ function errorHandler(err, req, res, next) {
     message: error.message,
     ...(process.env.NODE_ENV === "development" ? { stack: error.stack } : {}),
   }
-
+  removeUnusedMulterImageFilesOnError(req)
   return res.status(error.statusCode).json(response)
 }
 module.exports = errorHandler
