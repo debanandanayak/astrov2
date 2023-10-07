@@ -10,11 +10,14 @@ function verifySocketUser(socket, next) {
     const data = Token.verifyAccessToken(token[1])
     socket.user = data
     console.log(data)
+    const userId = socket.user.id
+    const userRole = socket.user.role
+    socket.room = `${userRole}-${userId}`
     next()
   } catch (error) {
+    console.log(error)
     next(error)
   }
 }
-
 
 module.exports = verifySocketUser

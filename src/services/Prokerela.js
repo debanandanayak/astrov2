@@ -1,14 +1,15 @@
 const { default: axios } = require("axios")
-
+require('dotenv').config()
 class Prokerela {
   static async getConfig() {
-    const data = await axios
+    let data = await axios
       .post(`https://api.prokerala.com/token`, {
         grant_type: "client_credentials",
         client_id: process.env.PROKERALA_CLIENT_ID,
         client_secret: process.env.PROKERALA_CLIENT_SECRET,
       })
       .then(res => {
+        console.log(res.status);
         return res.data
       })
     const token = `${data.token_type} ${data.access_token}`

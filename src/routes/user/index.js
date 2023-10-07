@@ -4,10 +4,16 @@ const {verifyAccessToken} = require('../../middlewares/verifyToken')
 const authentication = require('./authentication')
 const profile = require('./profile')
 const following = require('./following')
-
+const chat = require('./chat')
+const payment = require('./payment')
+const blog = require('./blog')
+const prokerala = require('./prokerala')
+userRouter.use('/',prokerala)
 userRouter.use('/',authentication)
 userRouter.use(verifyAccessToken)
 userRouter.use('/',profile)
 userRouter.use('/',following)
-
+userRouter.use('/',chat)
+userRouter.use('/',payment)
+userRouter.use('/',blog)
 module.exports = userRouter

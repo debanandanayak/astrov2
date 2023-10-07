@@ -4,7 +4,7 @@ const asyncHandler = require("../../utils/asyncHandler")
 async function getProfile(req,res){
     const id = req.id
     const profile = await Profile.getProfile(id)
-    res.json({profile})
+    res.json({user:profile})
 }
 async function updateProfile(req, res){
     const id = req.id

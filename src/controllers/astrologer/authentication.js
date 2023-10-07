@@ -15,10 +15,12 @@ const signup = async function (req,res){
     const user = await Authentication.signup(first_name,last_name,email,phone,password,gender)
     res.status(201).json({user})
 }
+
 const refresh = function (req,res){
     const payload = req.payload
     const tokens = Token.generateTokens(payload)
     res.status(200).json({...tokens})
 
 }
+
 module.exports={login:asyncHandler(login),signup:asyncHandler(signup),refresh}

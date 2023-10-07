@@ -4,7 +4,8 @@ const asyncHandler = require("../../utils/asyncHandler")
 
 async function getConversations (req, res){
   const id = req.id
-  const conversations = await Chat.getConversations(id)
+  const role = req.role.toLowerCase()
+  const conversations = await Chat.getConversations(id,role)
   res.json(conversations)
 }
 
@@ -21,8 +22,8 @@ async function sendMessage (req,res){
   const conversationId = req.params.id
   const sender = req.role.toLowerCase()
   console.log(sender);
-  await Chat.sendMessage(sender,conversationId,content)
-  res.send('ok')
+  const message = await Chat.sendMessage(sender,conversationId,id,content)
+  res.json({message})
 }
 
 async function createConversation(req,res){

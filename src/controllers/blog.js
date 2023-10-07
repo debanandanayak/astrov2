@@ -1,5 +1,4 @@
 const Blog = require("../services/Blog")
-const TODO = require("../utils/Todo")
 const asyncHandler = require("../utils/asyncHandler")
 
 async function createBlog(req,res){
@@ -33,11 +32,18 @@ async function getBlogs(req,res){
     res.json({blogs})
 }
 
+async function getUserFollowingBlogs(req,res){
+    const page = req.query.page
+    const limit = req.query.limit
+    const blogs = await Blog.getUserFollowingBlogs(page,limit)
+    res.json({blogs})
+}
 
 module.exports = {
     createBlog:asyncHandler(createBlog),
     updateBlog:asyncHandler(updateBlog),
     deleteBlog:asyncHandler(deleteBlog),
     getBlog:asyncHandler(getBlog),
-    getBlogs:asyncHandler(getBlogs)
+    getBlogs:asyncHandler(getBlogs),
+    getUserFollowingBlogs:asyncHandler(getUserFollowingBlogs),
 }

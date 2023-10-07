@@ -4,10 +4,12 @@ class Profile{
     static async getProfile(id){
         const user = await client.user.findUnique({
             where: {ID: id},select:{
+                ID: true,
                 name: true,
                 image:true,
                 gender:true,
                 place_of_birth:true,
+                time_of_birth:true,
             }
         })
         return user
@@ -23,6 +25,7 @@ class Profile{
                 place_of_birth: profile?.place_of_birth,
                 time_of_birth: profile?.time_of_birth,
             },select:{
+                ID:true,
                 name:true,
                 date_of_birth:true,
                 time_of_birth:true,

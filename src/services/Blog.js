@@ -1,7 +1,7 @@
 const client = require('../../database/client')
 const getPaginatedPayload = require('../helpers/getPaginatedPayload')
 class Blog{
-    static async createBlog(astrologerId,image,content,title){
+    static async createBlog(astrologerId,image,content,title,category='unknown'){
         const blog = await client.blog_Post.create({
             data:{
                 image:image,
@@ -11,7 +11,16 @@ class Blog{
                     connect:{
                        ID:astrologerId 
                     }
-                },
+                },category:{
+                    connectOrCreate:{
+                        where:{
+                            ID:1
+                        },create:{
+                            name:category
+                        }
+                    }
+                }
+                
             },
         })
         return blog
@@ -51,6 +60,24 @@ class Blog{
             }
         })
         return blog
+    }
+
+    static async getUserFollowingBlogs(id,page=1,limit=20){
+        let blogs = await client.blog_Post.findMany({
+            where: {
+                astrologer:{
+                    followers:{
+                        some: {
+                            ID:id
+                        }
+                    }
+                }
+            },include:{
+                astrologer: true
+            },
+        })
+        blogs = getPaginatedPayload(blogs, page, limit)
+        return blogs
     }
 
 }

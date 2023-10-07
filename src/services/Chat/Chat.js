@@ -22,7 +22,7 @@ class Chat {
     return conversation
   }
   
-  static async sendMessage(sender, conversationId, content) {
+  static async sendMessage(sender, conversationId,id, content) {
     if (!(sender === 'astrologer' || sender==='user')){
       throw new ApiError("Invalid sender | user | astrologer")
     }
@@ -31,17 +31,21 @@ class Chat {
         content: content,
         sender: sender,
         conversation_id: +conversationId,
+        astrologer_id:sender==='astrologer'? id:undefined,
+        userId: sender==='user'? id: undefined
+
       },
     })
+    console.log(message);
     return message
   }
 
-  static async getConversations(id) {
+  static async getConversations(id,role) {
     const conversations = await client.conversation.findMany({
       where: {
         OR:[
-            {astrologer_id: id},
-            {user_id:id}
+            {astrologer_id: role==='astrologer'?id:undefined},
+            {user_id:role==='user'?id:undefined}
         ]
       },
       include: {
@@ -49,6 +53,7 @@ class Chat {
           select: {
             name: true,
             image: true,
+
           },
         },
         messages: {
@@ -56,10 +61,14 @@ class Chat {
           orderBy: {
             createdAt: "desc",
           },
+
           select: {
             content: true,
             createdAt: true,
+            sender:true,
+            
           },
+
         },
       },
     })

@@ -46,6 +46,19 @@ class Profile {
     })
     return updatedProfile
   }
+  static async getAstrologers(){
+    const astrologers = await client.astrologer.findMany({
+      select: {
+        ID: true,
+        first_name:true,
+        last_name:true,
+        email:true,
+        phone:true,
+        image:true,
+      }
+    })
+    return astrologers
+  }
 }
 
 module.exports = Profile
