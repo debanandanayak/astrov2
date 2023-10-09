@@ -16,7 +16,7 @@ model User {
   gender         Gender?
   place_of_birth String?
   date_of_birth  String?
-  time_of_birth  DateTime?
+  time_of_birth  DateTime?        @db.Time()
   status         Status?
   otp            Int?
   otp_expired_in DateTime?
@@ -26,6 +26,7 @@ model User {
   updatedAt      DateTime?        @updatedAt()
   UserAstrologer UserAstrologer[]
   Wallet         Wallet?
+  Support        Support[]
 }
 
 model Astrologer {
@@ -124,7 +125,7 @@ model Blog_Post {
   image         String?
   title         String
   category      Category?   @relation(fields: [category_id], references: [ID])
-  content       String
+  content       String      @db.Text()
   astrologer    Astrologer? @relation(fields: [astrologer_id], references: [ID])
   astrologer_id Int?
   admin         Admin?      @relation(fields: [admin_id], references: [ID])
@@ -175,11 +176,16 @@ model UserAstrologer {
 }
 
 model Support {
-  ID           Int    @id @default(autoincrement())
+  ID           Int          @id @default(autoincrement())
   phone_number String
   subject      String
-  description  String
-  image        String
+  description  String?
+  image        String?
+  user         User?        @relation(fields: [user_id], references: [ID])
+  user_id      Int?
+  status       TicketStatus @default(open)
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?    @updatedAt()
 }
 
 model Wallet {
@@ -230,4 +236,10 @@ enum UserType {
   user
   astrologer
   admin
+}
+
+enum TicketStatus {
+  open
+  inprogress
+  close
 }
