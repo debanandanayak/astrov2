@@ -6,12 +6,19 @@ const { default: axios } = require("axios")
 const Chat = require("./src/services/Chat/Chat")
 const f = async () => {
   try {
-    const data = await Chat.createConversation(10,15)
-    console.log(data)
+    const price = await client.rate.findFirst({
+      where:{
+        astrologer_id:14
+      }
+    })
+  const maxChatTime = 100/10
+console.log(price)
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
   }
   
-  // console.log(data)
 }
 f()
+
+// SELECT session_start, session_end,time_to_sec(timediff(session_end,session_start)) /60 AS duration FROM chatsession;
+// timediff(session_end,session_start)
