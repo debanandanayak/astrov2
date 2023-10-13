@@ -2,7 +2,9 @@ require("dotenv").config()
 const express = require("express")
 const app = express()
 const cors = require("cors")
-const http = require("http")
+const http = require("http");
+const path =require('path')
+const fs =require('fs')
 const { Server } = require("socket.io")
 const astrologer = require("./routes/astrologer/index")
 const errorHandler = require("./middlewares/errorHandler")
@@ -36,6 +38,20 @@ const io = new Server(server, {
   },
   transports: ["websocket"],
 })
+
+app.get("/image/:name",async(req,res) =>{
+  const name = req.params.name
+  console.log(name)
+  try{
+    const imagePath = path.join(__dirname,`../public/images/${name}`)
+    fs.accessSync(imagePath)
+    res.sendFile(imagePath)
+  }catch(error){
+    res.status(404).json({ message: "No such file found" });
+  }
+})
+
+
 
 const session = {}
 io.use(verifySocketUser)
