@@ -21,9 +21,9 @@ async function deleteBlog(req,res){
     res.json({deletedBlog})
 }
 async function getBlog(req,res){
-    const blogId = +req.params.i
+    const blogId = +req.params.id
     const blog = await Blog.getBlog(blogId)
-    res.json({blog})
+    res.json({...blog})
 }
 async function getBlogs(req,res){
     const page = req.query.page

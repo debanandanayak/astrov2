@@ -15,17 +15,8 @@ class Authentication {
       update: {
         otp: generateOtp(),
         otp_expired_in: moment().add({ minute: 10 }),
-      },include: {
-        Wallet:true,
       }
     })
-    // if(!user?.Wallet) {
-    //   await client.wallet.create({
-    //     data:{
-    //       user_id:user.ID,
-    //     }
-    //   })
-    // }
 
     return user
   }

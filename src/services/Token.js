@@ -20,6 +20,7 @@ class Token{
     static verifyRefreshToken(token){
         const data =  jwt.verify(token, REFRESH_SECRET);
         delete data.iat
+        delete data.exp
         return data
     }
 

@@ -1,4 +1,4 @@
-const Role = require("../../constants")
+const Role = require("../../constants").Role
 const Token = require("../../services/Token")
 const Authentication = require("../../services/User/Authentication")
 const asyncHandler = require("../../utils/asyncHandler")

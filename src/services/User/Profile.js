@@ -17,9 +17,9 @@ class Profile{
     }
 
     static async updateProfile(id, profile){
-        console.log(profile.date_of_birth);
-        const date = new Date(profile.date_of_birth).toISOString()
+        let date = profile?.date_of_birth && new Date(profile.date_of_birth).toISOString()
         console.log(date);
+        console.log(profile);
         const user = await client.user.update(
             {where:{ID: id},data:{
                 name: profile?.name,

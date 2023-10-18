@@ -31,7 +31,10 @@ class Authentication {
         password: hashedPassword,
         phone: phone,
         gender: gender,
-      },
+      },select:{
+        ID:true,
+        email: true,
+      }
     })
     return newUser
   }

@@ -1,4 +1,4 @@
-const Role = require("../../constants")
+const Role = require("../../constants").Role
 const Authentication = require("../../services/Astrologer/Authentication")
 const Token = require("../../services/Token")
 const asyncHandler = require("../../utils/asyncHandler")
@@ -13,7 +13,7 @@ const login = async function(req,res){
 const signup = async function (req,res){
     const {first_name, last_name, email, phone, password, gender} = req.body
     const user = await Authentication.signup(first_name,last_name,email,phone,password,gender)
-    res.status(201).json({user})
+    res.status(201).json({message:'signup successful',user})
 }
 
 const refresh = function (req,res){

@@ -3,3 +3,4 @@ node_modules
 temp.js
 build
 public/images/*
+readme.md

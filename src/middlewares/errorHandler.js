@@ -1,10 +1,11 @@
+const { PrismaClientKnownRequestError } = require("@prisma/client/runtime/library")
 const { removeUnusedMulterImageFilesOnError } = require("../helpers/helper")
 const ApiError = require("../utils/ApiError")
 function errorHandler(err, req, res, next) {
   let error = err
 
   if (!(error instanceof ApiError)) {
-    const statusCode = error.statusCode || error instanceof Error ? 400 : 500
+    const statusCode = error.statusCode || error instanceof PrismaClientKnownRequestError ? 404 : 500
     console.log(error);
     const message = error.message || "Something went wrong"
     error = new ApiError(statusCode, message, error?.errors || [], err.stack)

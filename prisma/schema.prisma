@@ -15,8 +15,8 @@ model User {
   phone_number   String           @unique
   gender         Gender?
   place_of_birth String?
-  date_of_birth  String?
-  time_of_birth  DateTime?        @db.Time()
+  date_of_birth  DateTime?
+  time_of_birth  DateTime?
   status         Status?
   otp            Int?
   otp_expired_in DateTime?
@@ -25,8 +25,10 @@ model User {
   createdAt      DateTime?        @default(now())
   updatedAt      DateTime?        @updatedAt()
   UserAstrologer UserAstrologer[]
-  Wallet         Wallet?
-  Support        Support[]
+  wallet         Wallet?
+  supports       Support[]
+  chat_sessions  ChatSession[]
+  kundalies      Kundali[]
 }
 
 model Astrologer {
@@ -54,6 +56,7 @@ model Astrologer {
   followers        User[]           @relation("UserToAstrologer")
   UserAstrologer   UserAstrologer[]
   rates            Rate[]
+  chat_sessions    ChatSession[]
 }
 
 model Rate {
@@ -177,12 +180,16 @@ model UserAstrologer {
 }
 
 model ChatSession {
-  ID              Int       @id @default(autoincrement())
+  ID              Int          @id @default(autoincrement())
   conversation    Conversation @relation(fields: [conversation_id], references: [ID])
   conversation_id Int
   session_start   DateTime     @default(now())
   session_end     DateTime?    @updatedAt
-  duration Float?
+  duration        Float?
+  astrologer      Astrologer?  @relation(fields: [astrologer_id], references: [ID])
+  astrologer_id   Int?
+  user            User?        @relation(fields: [user_id], references: [ID])
+  user_id         Int?
 }
 
 model Support {
@@ -214,6 +221,17 @@ model Transaction {
   wallet      Wallet          @relation(fields: [wallet_id], references: [ID])
   wallet_id   Int
   createdAt   DateTime        @default(now())
+}
+
+model Kundali {
+  ID             Int         @id @default(autoincrement())
+  name           String
+  date_of_birth  DateTime
+  place_of_birth String
+  coordinate     String
+  type           KundaliType
+  user           User        @relation(fields: [user_id], references: [ID])
+  user_id        Int
 }
 
 enum TransactionType {
@@ -252,4 +270,9 @@ enum TicketStatus {
   open
   inprogress
   close
+}
+
+enum KundaliType {
+  boy
+  girl
 }

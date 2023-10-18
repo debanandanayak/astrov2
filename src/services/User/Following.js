@@ -3,29 +3,33 @@ const ApiError = require("../../utils/ApiError")
 
 class Following {
   static async createFollowing(userId, astrologerId) {
-    let following = await client.user.update({
-      where: {
-        ID: +userId,
-      },
-      data: {
-        followings: {
-          connect: {
-            ID: +astrologerId,
+    try {
+      let following = await client.user.update({
+        where: {
+          ID: +userId,
+        },
+        data: {
+          followings: {
+            connect: {
+              ID: +astrologerId,
+            },
           },
         },
-      },
-      select: {
-        followings: {
-          select: {
-            ID: true,
-            first_name: true,
-            last_name: true,
-            image: true,
+        select: {
+          followings: {
+            select: {
+              ID: true,
+              first_name: true,
+              last_name: true,
+              image: true,
+            },
           },
         },
-      },
-    })
-    return following
+      })
+      return following
+    } catch (error) {
+      throw new ApiError(400,"Astrologer doesn't exist",null,error)
+    }
   }
   static async getFollowing(userId, limit = 20, page = 1) {
     const followings = await client.user.findMany({
@@ -42,33 +46,36 @@ class Following {
         },
       },
     })
-
     return followings
   }
 
   static async removeFollowing(id, astrologerId) {
-    const removedFollowing = await client.user.update({
-      where: { ID: id },
-      data: {
-        followings: {
-          disconnect: {
-            ID: astrologerId,
+    try {
+      const removedFollowing = await client.user.update({
+        where: { ID: id },
+        data: {
+          followings: {
+            disconnect: {
+              ID: astrologerId,
+            },
           },
         },
-      },
-      select: {
-        followings: {
-          select: {
-            ID: true,
-            first_name: true,
-            last_name: true,
-            image: true,
-            gender: true,
+        select: {
+          followings: {
+            select: {
+              ID: true,
+              first_name: true,
+              last_name: true,
+              image: true,
+              gender: true,
+            },
           },
         },
-      },
-    })
-    return removedFollowing
+      })
+      return removedFollowing
+    } catch (error) {
+      throw new ApiError(400,'Invalid astrologer Id',null,error)
+    }
   }
 }
 

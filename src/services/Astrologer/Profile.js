@@ -46,7 +46,7 @@ class Profile {
         short_bio: short_bio,
         city: city,
         country: country,
-        image: image
+        image: image,
       },
       select: {
         first_name: true,
@@ -70,6 +70,7 @@ class Profile {
         phone: true,
         gender: true,
         image: true,
+        career_start:true,
         astrologer_types: {
           select: {
             ID: true,
@@ -77,6 +78,20 @@ class Profile {
           },
         },
         languages: true,
+        rates: {
+          select:{
+            chat_rate:true,
+            call_rate:true,
+            private_call_rate:true,
+
+          },
+          take:1,
+        },
+        _count:{
+          select:{
+            chat_sessions:true
+          }
+        }
       },
     })
     return astrologers
